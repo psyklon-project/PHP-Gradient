@@ -194,7 +194,7 @@ img{width:100%}
 
 <h1>PHP Gradient</h1>
 
-<p>The <b>Gradient</b> package can be used an <a href="https://en.wikipedia.org/wiki/Intermediate_representation" target="_blank">intermediate representation</a> of an RGB color gradient.<br>It means that you can use it as an in-between state when you convert a concreate gradient implementation to another.</p>
+<p>The <b>Gradient</b> package can be used as an <a href="https://en.wikipedia.org/wiki/Intermediate_representation" target="_blank">intermediate representation</a> of an RGB color gradient.<br>It means that you can use it as an in-between state when you convert a concreate gradient implementation to another.</p>
 
 <p><b>Gradient</b> can be also used as a standalone class for working with color gradients in PHP.<br>It has a very useful <code>getColorAt</code> method to calculate the RGB values at any given point on the gradient.</p>
 
