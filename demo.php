@@ -1,6 +1,7 @@
 <?php
 
-require __DIR__.'/src/Psyklon/Gradient/load-all.php';
+// require __DIR__.'/src/Psyklon/Gradient/load-all.php';
+require __DIR__.'/vendor/autoload.php';
 
 use Psyklon\Gradient\Gradient;
 
@@ -198,7 +199,7 @@ img{width:100%}
 
 <p><b>Gradient</b> can be also used as a standalone class for working with color gradients in PHP.<br>It has a very useful <code>getColorAt</code> method to calculate the RGB values at any given point on the gradient.</p>
 
-<p>You can read the full souce of this page in <code>demo.php</code>, just <a href="https://github.com/psyklon-project/PHP-Gradient" target="_blank">visit the repository</a>.</p>
+<p>You can read the full souce of this page in <code>demo.php</code>, <a href="https://github.com/psyklon-project/PHP-Gradient" target="_blank">click here to visit the repository</a>.</p>
 
 <p>
 	<br>
