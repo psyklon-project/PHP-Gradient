@@ -181,9 +181,9 @@ class Gradient
 		$nextcolor = $next->getColor();
 
 		return [
-			round($this->lerp($prevcolor[0], $nextcolor[0], $lerpval)),
-			round($this->lerp($prevcolor[1], $nextcolor[1], $lerpval)),
-			round($this->lerp($prevcolor[2], $nextcolor[2], $lerpval)),
+			(int)round($this->lerp($prevcolor[0], $nextcolor[0], $lerpval)),
+			(int)round($this->lerp($prevcolor[1], $nextcolor[1], $lerpval)),
+			(int)round($this->lerp($prevcolor[2], $nextcolor[2], $lerpval)),
 		];
 	}
 
