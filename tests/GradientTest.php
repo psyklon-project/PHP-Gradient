@@ -124,4 +124,22 @@ class GradientTest extends TestCase
 		self::assertSame($blue->getColorAt(75.0),  [128, 189, 255]);
 		self::assertSame($blue->getColorAt(100.0), [255, 255, 255]);
 	}
+
+	public function testColorsOutOfRange()
+	{
+		$grad = new Gradient();
+
+		self::assertSame($grad->getColorAt(25.0), [0, 0, 0]);
+		self::assertSame($grad->getColorAt(75.0), [0, 0, 0]);
+
+		$grad->addStop(255, 0, 0, 40.0);
+
+		self::assertSame($grad->getColorAt(25.0), [255, 0, 0]);
+		self::assertSame($grad->getColorAt(75.0), [255, 0, 0]);
+
+		$grad->addStop(0, 255, 0, 60.0);
+
+		self::assertSame($grad->getColorAt(25.0), [255, 0, 0]);
+		self::assertSame($grad->getColorAt(75.0), [0, 255, 0]);
+	}
 }
