@@ -10,16 +10,15 @@ namespace Psyklon\Gradient;
  */
 class Gradient
 {
-	private $stops;
-	private $index = 0;
+	private $stops = [];
 	private $dirty = false;
 
 	/**
 	 * Add a stop to the gradient
 	 * 
-	 * @param int   $r	red color component (0-255)
-	 * @param int   $g	green color component (0-255)
-	 * @param int   $b	blue color component (0-255)
+	 * @param int   $r	  red color component (0-255)
+	 * @param int   $g	  green color component (0-255)
+	 * @param int   $b	  blue color component (0-255)
 	 * @param float $pos  position (0-100)
 	 * 
 	 * @return float stop identifier (position)
@@ -29,7 +28,6 @@ class Gradient
 	{
 		$this->dirty = true;
 		$this->stops[$pos] = new GradientStop($r, $g, $b, $pos);
-		$this->index++;
 		return $pos;
 	}
 
@@ -58,15 +56,17 @@ class Gradient
 	 * @throws MissingColorStopException
 	 * @access public
 	 */
-	public function setStopPosition(float $id, float $pos)
+	public function setStopPosition(float $id, float $pos) : float
 	{
 		if(!isset($this->stops[$id])) {
 			throw new MissingColorStopException();
 		}
-		$this->dirty = true;
-		$this->stops[$pos] = clone $this->stops[$id];
-		$this->stops[$pos]->setPosition($pos);
-		unset($this->stops[$id]);
+		if($id !== $pos) {
+			$this->dirty = true;
+			$this->stops[$pos] = clone $this->stops[$id];
+			$this->stops[$pos]->setPosition($pos);
+			unset($this->stops[$id]);
+		}
 		return $pos;
 	}
 
@@ -90,31 +90,6 @@ class Gradient
 	}
 
 	/**
-	 * Set the color and position of the given stop
-	 * 
-	 * @param float $id   stop identifier (position)
-	 * @param int	$r	red color component (0-255)
-	 * @param int	$g	green color component (0-255)
-	 * @param int	$b	blue color component (0-255)
-	 * @param float  $pos  position (0-100)
-	 * 
-	 * @throws MissingColorStopException
-	 * @access public
-	 */
-	public function setStopData(float $id, int $r, int $g, int $b, float $pos)
-	{
-		if(!isset($this->stops[$id])) {
-			throw new MissingColorStopException();
-		}
-		$this->stops[$id]->setColor($r, $g, $b);
-		if($this->stops[$id]->getPosition() != $pos) {
-			$this->dirty = true;
-			return $this->setStopPosition($id, $pos);
-		}
-		return $id;
-	}
-
-	/**
 	 * Get the position of the given stop
 	 * 
 	 * @param float $id  stop identifier (position)
@@ -123,12 +98,12 @@ class Gradient
 	 * @throws MissingColorStopException
 	 * @access public
 	 */
-	public function getStopPosition(float $id)
+	public function getStopPosition(float $id) : float
 	{
 		if(!isset($this->stops[$id])) {
 			throw new MissingColorStopException();
 		}
-		return $stops[$id]->getPosition();
+		return $this->stops[$id]->getPosition();
 	}
 
 	/**
@@ -140,29 +115,12 @@ class Gradient
 	 * @throws MissingColorStopException
 	 * @access public
 	 */
-	public function getStopColor(float $id)
+	public function getStopColor(float $id) : array
 	{
 		if(!isset($this->stops[$id])) {
 			throw new MissingColorStopException();
 		}
-		return $stops[$id]->getColor();
-	}
-
-	/**
-	 * Get the color and position of the given stop
-	 * 
-	 * @param float $id  stop identifier (position)
-	 * 
-	 * @return array  [red, green, blue, position]
-	 * @throws MissingColorStopException
-	 * @access public
-	 */
-	public function getStopData(float $id)
-	{
-		if(!isset($this->stops[$id])) {
-			throw new MissingColorStopException();
-		}
-		return $stops[$id]->getData();
+		return $this->stops[$id]->getColor();
 	}
 
 	/**
@@ -171,10 +129,10 @@ class Gradient
 	 * @return array  array of GradientStops
 	 * @access public
 	 */
-	public function getStops()
+	public function getStops() : array
 	{
 		$this->handleDirty();
-		return $this->stops;
+		return array_values($this->stops);
 	}
 
 	/**
@@ -185,13 +143,10 @@ class Gradient
 	 * @return array [red, green, blue]
 	 * @access public
 	 */
-	public function getColorAt(float $pos)
+	public function getColorAt(float $pos) : array
 	{
 		if(empty($this->stops)) {
 			return [0, 0, 0];
-		}
-		if(sizeof($this->stops) == 1) {
-			return $this->stops[$keys[0]]->getColor();
 		}
 		if(isset($this->stops[$pos])) {
 			return $this->stops[$pos]->getColor();
@@ -199,6 +154,10 @@ class Gradient
 
 		$this->handleDirty();
 		$keys = array_keys($this->stops);
+
+		if(sizeof($this->stops) == 1) {
+			return $this->stops[$keys[0]]->getColor();
+		}
 
 		$first = $this->stops[$keys[0]];
 		$last  = $this->stops[$keys[sizeof($keys) - 1]];
@@ -237,7 +196,8 @@ class Gradient
 	 * @return array [red, green, blue]
 	 * @access private
 	 */
-	public static function hex2rgb(string $hex) {
+	public static function hex2rgb(string $hex) : array
+	{
 		return array_map(
 			function ($c) {
 				return hexdec(str_pad($c, 2, $c));
@@ -278,7 +238,7 @@ class Gradient
 	 * 
 	 * @access private
 	 */
-	private function getNeighbors(array $arr, float $pos)
+	private function getNeighbors(array $arr, float $pos) : array
 	{
 		$prev = 0;
 		$next = 100;
@@ -303,7 +263,7 @@ class Gradient
 	 * @return float value between 0 and 1
 	 * @access private
 	 */
-	private function lerp(float $a, float $b, float $v)
+	private function lerp(float $a, float $b, float $v) : float
 	{
 		return $a * (1 - $v) + $b * $v;
 	}

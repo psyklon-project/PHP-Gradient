@@ -60,28 +60,12 @@ class GradientStop
 	}
 
 	/**
-	 * Set the color and position of the stop
-	 * 
-	 * @param int   $r    red color component (0-255)
-	 * @param int   $g    green color component (0-255)
-	 * @param int   $b    blue color component (0-255)
-	 * @param float $pos  position (0-100)
-	 * 
-	 * @access public
-	 */
-	public function setData(int $r = null, int $g = null, int $b = null, float $position = null)
-	{
-		$this->setColor($r, $g, $b);
-		$this->setPosition($position);
-	}
-
-	/**
 	 * Get the position of the stop
 	 * 
 	 * @return float position
 	 * @access public
 	 */
-	public function getPosition()
+	public function getPosition() : float
 	{
 		return $this->pos;
 	}
@@ -92,20 +76,9 @@ class GradientStop
 	 * @return array [red, green, blue]
 	 * @access public
 	 */
-	public function getColor()
+	public function getColor() : array
 	{
 		return [$this->r, $this->g, $this->b];
-	}
-
-	/**
-	 * Get the color and position of the stop
-	 * 
-	 * @return array [red, green, blue, position]
-	 * @access public
-	 */
-	public function getData()
-	{
-		return [$this->r, $this->g, $this->b, $this->pos];
 	}
 
 	/**
@@ -116,7 +89,7 @@ class GradientStop
 	 * @return int value between 0 and 255
 	 * @access private
 	 */
-	private function clampColor(int $value)
+	private function clampColor(int $value) : int
 	{
 		return max(0, min(255, $value));
 	}
@@ -124,13 +97,13 @@ class GradientStop
 	/**
 	 * Force the given value to be between 0 and 100
 	 * 
-	 * @param int $value  the value
+	 * @param float $value  the value
 	 * 
-	 * @return int value between 0 and 100
+	 * @return float value between 0 and 100
 	 * @access private
 	 */
-	private function clampPos(float $value)
+	private function clampPos(float $value) : float
 	{
-		return max(0, min(100, $value));
+		return max(0.0, min(100.0, $value));
 	}
 }

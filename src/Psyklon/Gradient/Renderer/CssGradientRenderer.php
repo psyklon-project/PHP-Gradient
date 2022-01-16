@@ -45,8 +45,9 @@ class CssGradientRenderer implements GradientRenderer
 	{
 		$stops = $this->grad->getStops();
 		foreach($stops as $stop) {
-			$data = $stop->getData();
-			$cssarr[] = "rgb({$data[0]}, {$data[1]}, {$data[2]}) {$data[3]}%";
+			$col = $stop->getColor();
+			$pos = $stop->getPosition();
+			$cssarr[] = "rgb({$col[0]}, {$col[1]}, {$col[2]}) {$pos}%";
 		}
 		$css = implode(', ', $cssarr);
 		return "linear-gradient({$this->dir}deg, {$css})";
