@@ -23,9 +23,9 @@ class GradientTest extends TestCase
 
 		$stops = $grad->getStops();
 
-		self::assertSame(sizeof($stops), 1);
-		self::assertSame($stops[0]->getColor(), [10, 20, 30]);
-		self::assertSame($stops[0]->getPosition(), 0.0);
+		self::assertSame(1, sizeof($stops));
+		self::assertSame([10, 20, 30], $stops[0]->getColor());
+		self::assertSame(0.0, $stops[0]->getPosition());
 	}
 
 	public function testMoreStops()
@@ -40,17 +40,17 @@ class GradientTest extends TestCase
 
 		self::assertSame(sizeof($stops), 4);
 
-		self::assertSame($stops[0]->getColor(), [110, 120, 130]);
-		self::assertSame($stops[0]->getPosition(), 0.0);
+		self::assertSame([110, 120, 130], $stops[0]->getColor());
+		self::assertSame(0.0, $stops[0]->getPosition());
 
-		self::assertSame($stops[1]->getColor(), [140, 150, 160]);
-		self::assertSame($stops[1]->getPosition(), 33.333);
+		self::assertSame([140, 150, 160], $stops[1]->getColor());
+		self::assertSame(33.333, $stops[1]->getPosition());
 
-		self::assertSame($stops[2]->getColor(), [170, 180, 190]);
-		self::assertSame($stops[2]->getPosition(), 66.667);
+		self::assertSame([170, 180, 190], $stops[2]->getColor());
+		self::assertSame(66.667, $stops[2]->getPosition());
 
-		self::assertSame($stops[3]->getColor(), [200, 210, 220]);
-		self::assertSame($stops[3]->getPosition(), 100.0);
+		self::assertSame([200, 210, 220], $stops[3]->getColor());
+		self::assertSame(100.0, $stops[3]->getPosition());
 	}
 
 	public function testMissingStop()
@@ -69,9 +69,9 @@ class GradientTest extends TestCase
 
 		$stops = $grad->getStops();
 
-		self::assertSame(sizeof($stops), 1);
-		self::assertSame($stops[0]->getColor(),      [255, 255, 255]);
-		self::assertSame($grad->getStopColor($stop), [255, 255, 255]);
+		self::assertSame(1, sizeof($stops);
+		self::assertSame([255, 255, 255], $stops[0]->getColor());
+		self::assertSame([255, 255, 255], $grad->getStopColor($stop));
 	}
 
 	public function testGetSetPosition()
@@ -82,10 +82,10 @@ class GradientTest extends TestCase
 
 		$stops = $grad->getStops();
 
-		self::assertSame($stop, 100.0);
-		self::assertSame(sizeof($stops), 1);
-		self::assertSame($stops[0]->getPosition(), 100.0);
-		self::assertSame($grad->getStopPosition($stop), 100.0);
+		self::assertSame(1, sizeof($stops));
+		self::assertSame(100.0, $stop);
+		self::assertSame(100.0, $stops[0]->getPosition());
+		self::assertSame(100.0, $grad->getStopPosition($stop));
 	}
 
 	public function testGetSetSamePosition()
@@ -96,9 +96,9 @@ class GradientTest extends TestCase
 
 		$stops = $grad->getStops();
 
-		self::assertSame($stop, 0.0);
-		self::assertSame(sizeof($stops), 1);
-		self::assertSame($stops[0]->getPosition(), 0.0);
+		self::assertSame(1, sizeof($stops));
+		self::assertSame(0.0, $stop);
+		self::assertSame(0.0, $stops[0]->getPosition());
 	}
 
 	public function testGetColorAt()
@@ -112,34 +112,34 @@ class GradientTest extends TestCase
 		$blue->addStop(0,   123, 255, 50.0);
 		$blue->addStop(255, 255, 255, 100.0);
 
-		self::assertSame($grad->getColorAt(0.0),   [0,   0,   0  ]);
-		self::assertSame($grad->getColorAt(25.0),  [64,  64,  64 ]);
-		self::assertSame($grad->getColorAt(50.0),  [128, 128, 128]);
-		self::assertSame($grad->getColorAt(75.0),  [191, 191, 191]);
-		self::assertSame($grad->getColorAt(100.0), [255, 255, 255]);
+		self::assertSame([0,   0,   0  ], $grad->getColorAt(0.0));
+		self::assertSame([64,  64,  64 ], $grad->getColorAt(25.0));
+		self::assertSame([128, 128, 128], $grad->getColorAt(50.0));
+		self::assertSame([191, 191, 191], $grad->getColorAt(75.0));
+		self::assertSame([255, 255, 255], $grad->getColorAt(100.0));
 
-		self::assertSame($blue->getColorAt(0.0),   [0,   0,   0  ]);
-		self::assertSame($blue->getColorAt(25.0),  [0,   62,  128]);
-		self::assertSame($blue->getColorAt(50.0),  [0,   123, 255]);
-		self::assertSame($blue->getColorAt(75.0),  [128, 189, 255]);
-		self::assertSame($blue->getColorAt(100.0), [255, 255, 255]);
+		self::assertSame([0,   0,   0  ], $blue->getColorAt(0.0));
+		self::assertSame([0,   62,  128], $blue->getColorAt(25.0));
+		self::assertSame([0,   123, 255], $blue->getColorAt(50.0));
+		self::assertSame([128, 189, 255], $blue->getColorAt(75.0));
+		self::assertSame([255, 255, 255], $blue->getColorAt(100.0));
 	}
 
 	public function testColorsOutOfRange()
 	{
 		$grad = new Gradient();
 
-		self::assertSame($grad->getColorAt(25.0), [0, 0, 0]);
-		self::assertSame($grad->getColorAt(75.0), [0, 0, 0]);
+		self::assertSame([0, 0, 0], $grad->getColorAt(25.0));
+		self::assertSame([0, 0, 0], $grad->getColorAt(75.0));
 
 		$grad->addStop(255, 0, 0, 40.0);
 
-		self::assertSame($grad->getColorAt(25.0), [255, 0, 0]);
-		self::assertSame($grad->getColorAt(75.0), [255, 0, 0]);
+		self::assertSame([255, 0, 0], $grad->getColorAt(25.0));
+		self::assertSame([255, 0, 0], $grad->getColorAt(75.0));
 
 		$grad->addStop(0, 255, 0, 60.0);
 
-		self::assertSame($grad->getColorAt(25.0), [255, 0, 0]);
-		self::assertSame($grad->getColorAt(75.0), [0, 255, 0]);
+		self::assertSame([255, 0, 0], $grad->getColorAt(25.0));
+		self::assertSame([0, 255, 0], $grad->getColorAt(75.0));
 	}
 }
