@@ -15,6 +15,6 @@ namespace Psyklon\Gradient;
  */
 interface GradientRenderer
 {
-	public function __construct(Gradient $grad);
-	public function __toString() : string;
+    public function __construct(Gradient $grad);
+    public function __toString() : string;
 }

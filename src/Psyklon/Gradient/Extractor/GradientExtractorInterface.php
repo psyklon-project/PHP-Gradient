@@ -13,5 +13,5 @@ namespace Psyklon\Gradient;
  */
 interface GradientExtractor
 {
-	public function extract() : Gradient;
+    public function extract() : Gradient;
 }
