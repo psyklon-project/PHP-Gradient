@@ -69,7 +69,7 @@ class GradientTest extends TestCase
 
 		$stops = $grad->getStops();
 
-		self::assertSame(1, sizeof($stops);
+		self::assertSame(1, sizeof($stops));
 		self::assertSame([255, 255, 255], $stops[0]->getColor());
 		self::assertSame([255, 255, 255], $grad->getStopColor($stop));
 	}
