@@ -19,10 +19,13 @@ class ImageGradientExtractor implements GradientExtractor
     const SCAN_AVERAGE = -3;
 
     private $size;
-    private $image;
     private $scanpos;
+
+    private $image;
+    private $flatimage;
     
     private $indexes;
+    private $flatindexes;
 
     /**
      * Create a new reader
@@ -76,7 +79,7 @@ class ImageGradientExtractor implements GradientExtractor
         $grad = new Gradient();
         for($x = 0; $x < $this->size[0]; $x++) {
             $col = $this->scan($x);
-            $grad->addStop($col[0], $col[1], $col[2], ($x / $this->size[0]) * 100);
+            $grad->addStop($col[0], $col[1], $col[2], ((float)$x / (float)$this->size[0]) * 100.0);
         }
         return $grad;
     }
@@ -100,7 +103,7 @@ class ImageGradientExtractor implements GradientExtractor
                 return $this->getColorAt($x, $this->size[1] - 1);
 
             case self::SCAN_AVERAGE:
-                return $this->getAverageColorAt($x);
+                return $this->getColorAt($x, 0, true);
 
             default:
                 return $this->getColorAt($x, $this->scanpos);
@@ -110,43 +113,46 @@ class ImageGradientExtractor implements GradientExtractor
     /**
      * Get the color at the given coordinates, and cache it for reuse
      * 
-     * @param int $x  X positoin
-     * @param int $y  Y position
+     * @param int  $x     X positoin
+     * @param int  $y     Y position
+     * @param bool $flat  Flatten image
      * 
      * @return array [red, green, blue]
      * @access private
      */
-    private function getColorAt(int $x, int $y)
+    private function getColorAt(int $x, int $y, bool $flat = false)
     {
-        $index = imagecolorat($this->image, $x, $y);
-        if(isset($this->indexes[$index])) {
-            return $this->indexes[$index];
+        if($flat && !isset($this->flatimage)) {
+            $this->flattenImage();
         }
-        $col = imagecolorsforindex($this->image, $index);
-        $this->indexes[$index] = [$col['red'], $col['green'], $col['blue']];
-        return $this->indexes[$index];
+
+        $prefix  = $flat ? 'flat' : '';
+        $image   = $prefix.'image';
+        $indexes = $prefix.'indexes';
+
+        $index = imagecolorat($this->{$image}, $x, $y);
+        if(isset($this->{$indexes}[$index])) {
+            return $this->{$indexes}[$index];
+        }
+        $col = imagecolorsforindex($this->{$image}, $index);
+        $this->{$indexes}[$index] = [$col['red'], $col['green'], $col['blue']];
+        return $this->{$indexes}[$index];
     }
 
     /**
-     * Calculate the average color at the given X position
+     * Create and store a resized (1px height) copy of the image
      * 
-     * @param int $x  X position
-     * 
-     * @return array [red, green, blue]
      * @access private
      */
-    private function getAverageColorAt(int $x)
+    private function flattenImage()
     {
-        $r = $g = $b = [];
-        for($y = 0; $y < $this->size[1]; $y++) {
-            $col = $this->getColorAt($x, $y);
-            $r[] = $col[0];
-            $g[] = $col[1];
-            $b[] = $col[2];
-        }
-        $red   = round(array_sum($r) / sizeof($r));
-        $green = round(array_sum($g) / sizeof($g));
-        $blue  = round(array_sum($b) / sizeof($b));
-        return [$red, $green, $blue];
+        $this->flatimage = imagecreatetruecolor($this->size[0], 1);
+        imagecopyresampled(
+            $this->flatimage, $this->image,
+            0, 0,
+            0, 0,
+            $this->size[0], 1,
+            $this->size[0], $this->size[1]
+        );
     }
 }
