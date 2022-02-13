@@ -142,4 +142,48 @@ class GradientTest extends TestCase
         self::assertSame([255, 0, 0], $grad->getColorAt(25.0));
         self::assertSame([0, 255, 0], $grad->getColorAt(75.0));
     }
+
+    public function testRemoveStop()
+    {
+        $grad = new Gradient();
+        $stop = $grad->addStop(255, 0, 0, 40.0);
+        $grad->removeStop($stop);
+
+        self::assertSame([0, 0, 0], $grad->getColorAt(40.0));
+        self::assertEmpty($grad->getStops());
+    }
+
+    public function testRemoveMissingStop()
+    {
+        self::expectException(MissingColorStopException::class);
+
+        $grad = new Gradient();
+        $grad->addStop(255, 0, 0, 40.0);
+        $grad->removeStop(50.0);
+    }
+
+    public function testSetMissingStopPosition()
+    {
+        self::expectException(MissingColorStopException::class);
+
+        $grad = new Gradient();
+        $grad->addStop(255, 0, 0, 40.0);
+        $grad->setStopPosition(50.0, 60.0);
+    }
+
+    public function testGetMissingStopPosition()
+    {
+        self::expectException(MissingColorStopException::class);
+
+        $grad = new Gradient();
+        $grad->getStopPosition(50.0);
+    }
+
+    public function testGetMissingStopColor()
+    {
+        self::expectException(MissingColorStopException::class);
+
+        $grad = new Gradient();
+        $grad->getStopColor(50.0);
+    }
 }

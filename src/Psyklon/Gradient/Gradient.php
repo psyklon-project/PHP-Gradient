@@ -188,25 +188,6 @@ class Gradient
     }
 
     /**
-     * Convert a HEX string to RGB values
-     * @see https://stackoverflow.com/a/17115500/2909109
-     * 
-     * @param string $hex  hexadecimal color string
-     * 
-     * @return array [red, green, blue]
-     * @access private
-     */
-    public static function hex2rgb(string $hex) : array
-    {
-        return array_map(
-            function ($c) {
-                return hexdec(str_pad($c, 2, $c));
-            },
-            str_split(ltrim($hex, '#'), strlen($hex) > 4 ? 2 : 1)
-        );
-    }
-
-    /**
      * Sort the stops only if any position changed
      * 
      * @access private
